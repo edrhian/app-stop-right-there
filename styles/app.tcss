@@ -1,7 +1,3 @@
-Button.shown {
-    display: block
-}
-
-Button.hidden {
-    display: none
+DataTable {
+    align: center middle
 }

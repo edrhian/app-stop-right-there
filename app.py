@@ -8,9 +8,11 @@ import logging
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
 
-class MyApp(App):
+class StopRightThereApp(App):
 
+    TITLE = "Stop Right There!"
     CSS_PATH = "styles/app.tcss"
+
     BINDINGS = [
         ("a", "add_rule", "Add New Rule"),
         ("e", "edit_rule", "Edit Rule"),
@@ -79,5 +81,5 @@ if __name__ == "__main__":
         datefmt="%Y-%m-%d %H:%M",
         level=logging.INFO,
     )
-    app = MyApp()
+    app = StopRightThereApp()
     app.run()
