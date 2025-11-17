@@ -4,6 +4,7 @@ from textual import on, work
 from core.window_manager import read_screen_title
 import core.rule as rule
 import logging
+import os.path
 
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
@@ -85,5 +86,10 @@ if __name__ == "__main__":
         datefmt="%Y-%m-%d %H:%M",
         level=logging.INFO,
     )
+
+    if not os.path.isfile("data/blacklist.json"):
+        with open("data/blacklist.json", "w") as f:
+            f.write("[]")
+
     app = StopRightThereApp()
     app.run()
