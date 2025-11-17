@@ -8,8 +8,17 @@ from textual.reactive import reactive
 class WarningScreen(Screen):
     
     CSS_PATH = "../styles/warning_screen.tcss"
-
     time_left = reactive(5)
+    
+    BINDINGS = [
+        ("a", "noop", None),
+        ("e", "noop", None),
+        ("r", "noop", None),
+    ]
+
+    # Cancel binding inheritance from app.py
+    def action_noop(self) -> None:
+        pass
 
     def on_mount(self) -> None:
         self.dismiss_button = self.query_one(Button)

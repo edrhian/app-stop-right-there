@@ -9,8 +9,15 @@ class ConfirmationScreen(Screen):
 
     BINDINGS = [
         ("escape", "cancel", "Cancel"),
-        ("r", "confirm_deletion", "Confirm Deletion")
-    ]    
+        ("r", "confirm_deletion", "Confirm Deletion"),
+        ("a", "noop", None),
+        ("e", "noop", None),
+    ]
+
+    # Cancel binding inheritance from app.py
+    def action_noop(self) -> None:
+        pass
+
     CSS_PATH = "../styles/confirmation_screen.tcss"
 
     def compose(self) -> ComposeResult:
