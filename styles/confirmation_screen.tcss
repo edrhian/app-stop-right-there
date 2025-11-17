@@ -1,3 +1,7 @@
+Vertical {
+    align: center middle
+}
+
 Label.confirmation_title {
     margin: 1 1 1 1;
     text-style: bold;
