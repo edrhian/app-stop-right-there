@@ -7,6 +7,7 @@ import logging
 
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
+from screens.confirmation_screen import ConfirmationScreen
 
 class StopRightThereApp(App):
 
@@ -64,12 +65,15 @@ class StopRightThereApp(App):
             self.pop_screen()
         self.push_screen(WarningScreen())
 
-    def action_remove_rule(self) -> None:
-        table = self.query_one(DataTable)
-        row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
-        rule.delete_rule(table.get_row(row_key)[0])
-        self.rules = rule.load_rules()
-        self.refresh_table()
+    @work
+    async def action_remove_rule(self) -> None:
+        user_confirm = await self.push_screen_wait(ConfirmationScreen())
+        if user_confirm:
+            table = self.query_one(DataTable)
+            row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
+            rule.delete_rule(table.get_row(row_key)[0])
+            self.rules = rule.load_rules()
+            self.refresh_table()
 
 if __name__ == "__main__":
     logging.basicConfig(
