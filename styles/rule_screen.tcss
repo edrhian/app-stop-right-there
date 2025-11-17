@@ -1,0 +1,25 @@
+ModalScreen {
+    layout: vertical;
+    align: center middle;
+}
+
+#title {
+    margin: 2;
+}
+
+Input {
+    max-width: 70%;
+    margin: 1;
+}
+
+Button {
+    align: center middle;
+    margin: 2;
+}
+
+Label.rule_screen_title {
+    color: white;
+    text-style: bold;
+    margin: 1;
+    width: auto;
+}

@@ -1,25 +1,44 @@
 from textual.app import ComposeResult
-from textual.widgets import Footer, Header, Button, Label
+from textual.widgets import Footer, Header, Button, Label, Digits
 from textual import on
 from textual.screen import Screen
+from textual.containers import Vertical
+from textual.reactive import reactive
 
 class WarningScreen(Screen):
     
     CSS_PATH = "../styles/warning_screen.tcss"
 
+    time_left = reactive(5)
+
     def on_mount(self) -> None:
         self.dismiss_button = self.query_one(Button)
         self.dismiss_button.add_class("hidden")
         self.set_focus(self.dismiss_button)
-        self.set_timer(3, self.show_button)
+        self.tick_timer = self.set_interval(1, self.tick)
         
+    def tick(self) -> None:
+        self.time_left -= 1
+        if not self.time_left:
+            self.tick_timer.stop()
+            self.show_button()
+
+    def watch_time_left(self, time_left: int) -> None:
+        time, seconds = divmod(time_left, 60)
+        hours, minutes = divmod(time, 60)
+        self.query_one(Digits).update(f"{hours:02}:{minutes:02}:{seconds:02}")
+
     def show_button(self) -> None:
         self.dismiss_button.remove_class("hidden")
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Label("This is a warning screen!")
-        yield Button("Dismiss", id="dismiss_button", variant="error" )
+        with Vertical(id="warning_container"):
+            yield Label("Stop Right There!",classes="warning_text")
+            yield Label(f"Wait",classes="warning_text")
+            yield Digits()
+            yield Label(f"Before continue",classes="warning_text")
+            yield Button("Dismiss", id="dismiss_button", variant="error" )
         yield Footer()
 
     @on(Button.Pressed)

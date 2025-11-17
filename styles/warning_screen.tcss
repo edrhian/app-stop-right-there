@@ -1,7 +1,26 @@
+Button {
+    margin: 1;
+}
+
 Button.shown {
-    display: block
+    display: block;
 }
 
 Button.hidden {
-    display: none
+    display: none;
+}
+
+#warning_container {
+    align: center middle;
+}
+
+Label.warning_text {
+    color: red;
+    text-style: bold;
+    margin: 1;
+    width: auto;
+}
+
+Digits {
+    width: auto;
 }

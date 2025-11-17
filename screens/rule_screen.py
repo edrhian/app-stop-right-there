@@ -1,10 +1,14 @@
 from textual.app import ComposeResult
-from textual.widgets import Footer, Header, Button, Input
+from textual.widgets import Footer, Header, Button, Input, Label
 from textual.reactive import reactive
 from textual import on
 from textual.screen import ModalScreen    
+from textual.containers import Vertical
 
 class RuleScreen(ModalScreen[list]):
+
+    CSS_PATH = "../styles/rule_screen.tcss"
+
     def __init__(self, rule_name = "",rule_expression = "", mode = "add"):
         super().__init__()
         self.mode = mode
@@ -20,9 +24,24 @@ class RuleScreen(ModalScreen[list]):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Input(placeholder="Rule Name", id="input_rule_name", disabled=(self.mode=="edit"), value="" if self.mode=="add" else self.rule_name)
-        yield Input(placeholder="Rule Expression", id="input_rule_expression", value="" if self.mode=="add" else self.rule_expression)
-        yield Button(variant="success",label="Submit")
+
+        with Vertical(id="form_container"):
+            yield Label(content="Add New Rule" if self.mode=="add" else "Modify Rule", id="title")
+            yield Input(
+                placeholder="Rule Name", 
+                id="input_rule_name", 
+                disabled=(self.mode=="edit"), 
+                value="" if self.mode=="add" else self.rule_name,
+                classes="rule_screen_title"
+            )
+            yield Input(
+                placeholder="Rule Expression", 
+                id="input_rule_expression", 
+                value="" if self.mode=="add" else self.rule_expression,
+                classes="rule_screen_title"
+            )
+            yield Button(variant="success", label="Submit")
+            
         yield Footer()
 
     @on(Button.Pressed)
