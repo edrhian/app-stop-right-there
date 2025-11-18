@@ -2,14 +2,6 @@ Button {
     margin: 1;
 }
 
-Button.shown {
-    display: block;
-}
-
-Button.hidden {
-    display: none;
-}
-
 #warning_container {
     align: center middle;
 }

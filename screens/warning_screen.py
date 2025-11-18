@@ -32,7 +32,7 @@ class WarningScreen(ModalScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with Vertical(id="warning_container"):
+        with Vertical(id="warning_container", classes="dialog_box"):
             yield Label("Stop Right There!",classes="warning_text")
             yield Label(f"Wait",classes="warning_text")
             yield Digits()
