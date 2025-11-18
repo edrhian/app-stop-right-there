@@ -26,19 +26,17 @@ class RuleScreen(ModalScreen[list]):
         yield Header()
 
         with Vertical(id="form_container"):
-            yield Label(content="Add New Rule" if self.mode=="add" else "Modify Rule", id="title")
+            yield Label(content="Add New Rule" if self.mode=="add" else "Modify Rule", classes="title")
             yield Input(
                 placeholder="Rule Name", 
                 id="input_rule_name", 
                 disabled=(self.mode=="edit"), 
                 value="" if self.mode=="add" else self.rule_name,
-                classes="rule_screen_title"
             )
             yield Input(
                 placeholder="Rule Expression", 
                 id="input_rule_expression", 
                 value="" if self.mode=="add" else self.rule_expression,
-                classes="rule_screen_title"
             )
             yield Button(variant="success", label="Submit")
             

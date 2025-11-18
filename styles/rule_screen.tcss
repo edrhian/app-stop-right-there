@@ -1,17 +1,3 @@
-ModalScreen {
-    layout: vertical;
-    align: center middle;
-}
-
-#title {
-    margin: 2;
-}
-
-Input {
-    max-width: 70%;
-    margin: 1;
-}
-
 Button {
     align: center middle;
     margin: 2;
