@@ -1,24 +1,14 @@
 from textual.app import ComposeResult
 from textual.widgets import Footer, Header, Button, Label, Digits
 from textual import on
-from textual.screen import Screen
+from textual.screen import ModalScreen
 from textual.containers import Vertical
 from textual.reactive import reactive
 
-class WarningScreen(Screen):
+class WarningScreen(ModalScreen):
     
     CSS_PATH = "../styles/warning_screen.tcss"
     time_left = reactive(5)
-    
-    BINDINGS = [
-        ("a", "noop", None),
-        ("e", "noop", None),
-        ("r", "noop", None),
-    ]
-
-    # Cancel binding inheritance from app.py
-    def action_noop(self) -> None:
-        pass
 
     def on_mount(self) -> None:
         self.dismiss_button = self.query_one(Button)

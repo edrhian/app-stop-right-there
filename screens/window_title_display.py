@@ -2,7 +2,7 @@ import asyncio
 from textual.app import ComposeResult
 from textual.widgets import Footer, Header, Label
 from textual import work
-from textual.screen import Screen
+from textual.screen import ModalScreen
 from textual.containers import Vertical, ScrollableContainer
 from textual.reactive import reactive
 
@@ -10,7 +10,7 @@ from core.window_manager import get_window_title
 
 DESCRIPTION = """This screen lets you know what is the exact title that the app reads"""
 
-class WindowTitleDisplay(Screen):
+class WindowTitleDisplay(ModalScreen):
 
     BINDINGS = [
         ("escape", "cancel", "Cancel"),
