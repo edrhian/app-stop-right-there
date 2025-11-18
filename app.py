@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, DataTable
 from textual import on, work
-from core.window_manager import read_screen_title
+from core.window_manager import watch_screen_title
 import core.rule as rule
 import logging
 import os.path
@@ -9,6 +9,7 @@ import os.path
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
 from screens.confirmation_screen import ConfirmationScreen
+from screens.window_title_display import WindowTitleDisplay
 
 class StopRightThereApp(App):
 
@@ -18,7 +19,8 @@ class StopRightThereApp(App):
     BINDINGS = [
         ("a", "add_rule", "Add New Rule"),
         ("e", "edit_rule", "Edit Rule"),
-        ("r", "remove_rule", "Remove Rule")
+        ("r", "remove_rule", "Remove Rule"),
+        ("s", "find_window_title", "Window Title Finder")
     ]
 
     def compose(self) -> ComposeResult:
@@ -59,7 +61,7 @@ class StopRightThereApp(App):
         
     @work
     async def start_window_watch(self):
-        await read_screen_title(lambda: self.rules, on_blacklisted=self.handle_blacklisted_window)
+        await watch_screen_title(lambda: self.rules, on_blacklisted=self.handle_blacklisted_window)
 
     def handle_blacklisted_window(self, window_title: str):
         if isinstance(self.screen, WarningScreen):
@@ -75,6 +77,9 @@ class StopRightThereApp(App):
             rule.delete_rule(table.get_row(row_key)[0])
             self.rules = rule.load_rules()
             self.refresh_table()
+
+    def action_find_window_title(self) -> None:
+        self.push_screen(WindowTitleDisplay())
 
 if __name__ == "__main__":
     logging.basicConfig(

@@ -1,0 +1,18 @@
+Vertical#window_title_display_container {
+    margin: 1 0 1 2;
+}
+
+#scan_list{
+    border: solid white;
+    margin: 1;
+    padding: 1;
+}
+
+Label.window_title_display_title {
+    color: white;
+    text-style: bold;
+}
+
+Label.window_title_display_description{
+    margin: 1;
+}
