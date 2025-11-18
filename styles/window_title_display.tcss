@@ -1,14 +1,6 @@
 #scan_list{
     border: solid white;
-    margin: 1;
-    padding: 1;
+    margin: 1 2 1 2;
+    padding: 1 2 1 2;
 }
 
-Label.window_title_display_title {
-    color: white;
-    text-style: bold;
-}
-
-Label.window_title_display_description{
-    margin: 1;
-}

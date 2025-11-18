@@ -5,6 +5,7 @@ from textual import work
 from textual.screen import ModalScreen
 from textual.containers import Vertical, ScrollableContainer
 from textual.reactive import reactive
+from textual.binding import Binding
 
 from core.window_manager import get_window_title
 
@@ -14,27 +15,24 @@ class WindowTitleDisplay(ModalScreen):
 
     BINDINGS = [
         ("escape", "cancel", "Cancel"),
-        ("s", "start_scan", "Start Scanning"),
-        ("a", "noop", None),
-        ("e", "noop", None),
-        ("r", "noop", None),
+        ("s", "scan_switch", "Start/Stop Scanning"),
+        ("c", "clear_list", "Clear Scan List"),
     ]
-
-    # Cancel binding inheritance from app.py
-    def action_noop(self) -> None:
-        pass
 
     CSS_PATH = "../styles/window_title_display.tcss"
 
     is_scanning = reactive(False)
+    scan_state_label: Label | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(id="window_title_display_container"):
-            yield Label(DESCRIPTION, classes="window_title_display_title")
-            yield Label("> Press 's' to start/stop scanning every 1 second", classes="window_title_display_description")
+            yield Label(DESCRIPTION, classes="title")
+            yield Label("> Press 's' to start/stop scanning every 1 second", classes="subtitle")
+            self.scan_state_label = Label(f"Scanning: {self.is_scanning}", id="scan_state", classes="subtitle")
+            yield self.scan_state_label
 
-            self.scan_list = ScrollableContainer(id="scan_list")  
+            self.scan_list = ScrollableContainer(id="scan_list") 
             yield self.scan_list
 
         yield Footer()
@@ -42,8 +40,12 @@ class WindowTitleDisplay(ModalScreen):
     def action_cancel(self) -> None:
         self.dismiss()
 
+    def watch_is_scanning(self) -> None:
+        if self.scan_state_label:
+            self.scan_state_label.update(f"Scanning: {self.is_scanning}")
+
     @work
-    async def action_start_scan(self):
+    async def action_scan_switch(self):
         """Append a new line to the scan list every second."""
         self.is_scanning = not self.is_scanning
 
@@ -58,3 +60,6 @@ class WindowTitleDisplay(ModalScreen):
             new_label.scroll_visible()
 
             await asyncio.sleep(1)
+
+    def action_clear_list(self):
+        self.scan_list.remove_children()
