@@ -7,6 +7,10 @@ from textual.reactive import reactive
 
 class ConfirmationScreen(ModalScreen):
 
+    def __init__(self, rule_name):
+        super().__init__()
+        self.rule_name = rule_name
+
     BINDINGS = [
         ("escape", "cancel", "Cancel"),
         ("r", "confirm_deletion", "Confirm Deletion"),
@@ -16,8 +20,8 @@ class ConfirmationScreen(ModalScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with Vertical(id="confirm_v_container"):
-            yield Label("Delete this rule?",classes="confirmation_title")
+        with Vertical(classes="dialog_box"):
+            yield Label(f"Delete {self.rule_name} rule?",classes="confirmation_title")
             yield Label("> Press 'escape' to cancel",classes="confirmation_text")
             yield Label("> Press 'r' again to confirm",classes="confirmation_text")
         yield Footer()
