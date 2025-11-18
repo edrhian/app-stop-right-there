@@ -1,5 +1,5 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, DataTable
+from textual.widgets import Footer, Header, DataTable, Label
 from textual import on, work
 from core.window_manager import watch_screen_title
 import core.rule as rule
@@ -25,7 +25,7 @@ class StopRightThereApp(App):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield DataTable()
+        yield DataTable(zebra_stripes=True,cursor_type="row",id="rule_list")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -35,10 +35,10 @@ class StopRightThereApp(App):
 
     def refresh_table(self):
         table = self.query_one(DataTable)
-        table.cursor_type = "row"
         table.clear(columns=True)
 
-        rules = rule.load_rules()
+        rules = sorted(rule.load_rules(), key=lambda r: (r["name"], r["expression"]))
+
         table.add_columns("name", "expression")
         table.add_rows([(r["name"], r["expression"]) for r in rules])
 
@@ -70,11 +70,13 @@ class StopRightThereApp(App):
 
     @work
     async def action_remove_rule(self) -> None:
-        user_confirm = await self.push_screen_wait(ConfirmationScreen())
-        if user_confirm:
-            table = self.query_one(DataTable)
-            row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
-            rule.delete_rule(table.get_row(row_key)[0])
+        table = self.query_one(DataTable)
+        row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
+        rule_name = table.get_row(row_key)[0]
+        
+        user_confirm = await self.push_screen_wait(ConfirmationScreen(rule_name))
+        if user_confirm:    
+            rule.delete_rule(rule_name)
             self.rules = rule.load_rules()
             self.refresh_table()
 

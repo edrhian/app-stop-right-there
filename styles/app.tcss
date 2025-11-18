@@ -1,3 +1,40 @@
 DataTable {
-    align: center middle
+    width: 100%;
+}
+
+Input {
+    max-width: 70%;
+    margin: 1;
+}
+
+ModalScreen {
+    layout: vertical;
+    align: center middle;
+}
+
+Button.shown {
+    display: block;
+}
+
+Button.hidden {
+    display: none;
+}
+
+.title {
+    text-style: bold;
+    margin: 1 2 1 2;
+}
+
+.subtitle {
+    text-style: italic;
+    margin: 1 2 1 2;
+}
+
+.dialog_box {
+    align: center middle;
+    border: white round;
+    width: auto;
+    height: auto;
+    padding: 1;
+    content-align: center middle;
 }
