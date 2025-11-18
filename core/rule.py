@@ -8,10 +8,13 @@ BLACKLIST_PATH = "data/blacklist.json"
 """Rule structure
 - name: Name of the rule
 - expression: Regular expression to match the window title
+- enabled: If the rule is applied
 """
+
 class Rule(TypedDict):
     name: str
     expression: str
+    enabled: bool
 
 def load_rules() -> List[Rule]:
     """Load all rules inside the blacklist file
@@ -36,7 +39,7 @@ def save_rules(rules: List[Rule]) -> None:
     with open(f"{BLACKLIST_PATH}", "w") as f:
         json.dump(rules, f, indent=2)
 
-def create_rule(name: str, expression: str) -> None:
+def create_rule(name: str, expression: str, enabled: bool) -> None:
     """Creates the new rule if it doesn't exists
 
     Parameters
@@ -51,11 +54,11 @@ def create_rule(name: str, expression: str) -> None:
     if any(rule["name"] == name for rule in rules):
         raise ValueError(f"Rule '{name}' already exists.")
 
-    rules.append({"name": name, "expression": expression})
+    rules.append({"name": name, "expression": expression, "enabled": enabled})
 
     save_rules(rules)
 
-def edit_rule(name: str, expression: str) -> bool:
+def edit_rule(name: str, expression: str, enabled: bool) -> bool:
     """Edits an existing rule
     
     Parameters
@@ -74,12 +77,13 @@ def edit_rule(name: str, expression: str) -> bool:
     for rule in rules:
         if rule["name"] == name:
             rule["expression"] = expression
+            rule["enabled"] = enabled
             save_rules(rules)
             return True
     return False
 
 def check_rules(window_title: str, rules: List[Rule]) -> bool:
-    """Checks if the window title matches any rule
+    """Checks if the window title matches any enabled rule
     
     Parameters
     ----------
@@ -94,7 +98,7 @@ def check_rules(window_title: str, rules: List[Rule]) -> bool:
         True if the window title matches any rule, False otherwise
     """
     for rule in rules:
-        if re.search(rule["expression"], window_title):
+        if re.search(rule["expression"], window_title) and rule["enabled"]:
             return True
     return False
 
@@ -118,3 +122,4 @@ def delete_rule(rule_name) -> bool:
             save_rules(rules)
             return True
     return False
+
