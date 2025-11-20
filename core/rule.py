@@ -1,4 +1,5 @@
-from dataclasses import dataclass, field
+"""Defines the data structure of Rule dataclass"""
+from dataclasses import dataclass
 import re
 
 @dataclass
@@ -9,6 +10,7 @@ class Rule:
     enabled: bool = True
 
     def matches(self, text: str) -> bool:
+        """Checks if the text provided matches with te regular expression of the Rule"""
         return self.enabled and re.search(self.expression, text) is not None
 
 def validate_rule(rule: Rule):

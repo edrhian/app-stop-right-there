@@ -1,3 +1,4 @@
+"""Provides CRUD operation functions for Rule Object management"""
 import asyncio
 import json
 from pathlib import Path
@@ -18,19 +19,27 @@ class RuleManager:
             return []
 
         try:
-            with open(self.path, "r") as f:
+            with open(self.path, "r", encoding="UTF-8") as f:
                 data = json.load(f)
 
-            return [Rule(name=rule["name"], expression=rule["expression"], enabled=rule["enabled"]) for rule in data]
+            return [
+                Rule(name=rule["name"],
+                     expression=rule["expression"],
+                     enabled=rule["enabled"]) for rule in data
+                ]
 
-        except json.JSONDecodeError:
-            raise ValueError(f"Invalid JSON inside {self.path}")
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid JSON inside {self.path}") from exc
 
     def _save(self) -> None:
         """Saves all rules to a json file from path"""
-        data = [{"name": rule.name, "expression": rule.expression, "enabled": rule.enabled} for rule in self.rules]
+        data = [
+            {"name": rule.name,
+             "expression": rule.expression, 
+             "enabled": rule.enabled} for rule in self.rules
+        ]
 
-        with open(self.path, "w") as f:
+        with open(self.path, "w", encoding="UTF-8") as f:
             json.dump(data, f, indent=2)
 
     async def create_rule(self, rule: Rule) -> None:

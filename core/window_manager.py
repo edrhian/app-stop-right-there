@@ -1,10 +1,10 @@
-from ctypes import windll, create_unicode_buffer
+"""Provides functions to read and interact with windows from Windows OS"""
 import asyncio
 import logging
+from typing import Optional
+from ctypes import windll
 import win32gui
-from typing import Optional, Callable, List
-from core.rule import Rule
-from core.rule_manager import manager
+
 
 def force_focus_console():
     """Forces the console window to the foreground"""
@@ -29,26 +29,26 @@ def force_focus_console():
 
 def get_window_title() -> Optional[str]:
     """Gets the title of the currently active window"""
-    hWnd = win32gui.GetForegroundWindow()
+    # Window handle
+    hwnd = win32gui.GetForegroundWindow()
 
-    return win32gui.GetWindowText(hWnd)
+    return win32gui.GetWindowText(hwnd)
 
 async def watch_screen_title(get_rules, on_blacklisted, interval: float = 1.0):
-    """Continuously reads the active window title and checks if the title matches any blacklisted rules"""
+    """Continuously reads the active window title 
+    and checks if the title matches any blacklisted rules"""
     last_title = None
     while True:
         rules = get_rules()
 
         title = await asyncio.to_thread(get_window_title)
         title = title or ""
-        
         for rule in rules:
             if rule.enabled and rule.matches(title):
                 force_focus_console()
                 on_blacklisted(title)
-        
         if title != last_title:
-            logging.info(f"Active window: {title}")
+            logging.info("Active window: %s", title)
 
         last_title = title
 
