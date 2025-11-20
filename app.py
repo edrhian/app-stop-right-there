@@ -1,8 +1,10 @@
+from typing import List, Tuple
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, DataTable, Label
-from textual import on, work
+from textual.widgets import Footer, Header, DataTable
+from textual import work
 from core.window_manager import watch_screen_title
-import core.rule as rule
+from core.rule_manager import manager
+from core.rule import Rule
 import logging
 import os.path
 
@@ -30,39 +32,49 @@ class StopRightThereApp(App):
         yield Footer()
 
     def on_mount(self) -> None:
-        self.rules = rule.load_rules()
         self.refresh_table()
         self.start_window_watch()
 
-    def refresh_table(self):
+    def refresh_table(self, cursor_row=0):
         table = self.query_one(DataTable)
         table.clear(columns=True)
 
-        rules = sorted(rule.load_rules(), key=lambda r: (r["name"], r["expression"]))
+        rules = sorted(manager.get_rules(), key=lambda rule: (rule.name, rule.expression))
 
-        table.add_columns("name", "expression","enabled")
-        table.add_rows([(r["name"], r["expression"], r["enabled"]) for r in rules])
+        table.add_columns("name", "expression", "enabled")
+        table.add_rows([(rule.name, rule.expression, rule.enabled) for rule in rules])
+
+        table.move_cursor(row=cursor_row)
+
+    def get_table_row_values(self) -> Tuple:
+        table = self.query_one(DataTable)
+        row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
+        name, expression, enabled = table.get_row(row_key)
+        cursor_row = table.cursor_row
+        return name, expression, enabled, cursor_row
 
     @work
     async def action_add_rule(self) -> None:
         rule_name, rule_expression, rule_enabled = await self.push_screen_wait(RuleScreen("add"))
-        rule.create_rule(rule_name,rule_expression, rule_enabled)
-        self.rules = rule.load_rules()
-        self.refresh_table()
+        cursor_row = self.get_table_row_values()[-1]
+        new_rule = Rule(rule_name, rule_expression, rule_enabled)
+
+        await manager.create_rule(new_rule)
+        self.refresh_table(cursor_row)
 
     @work
     async def action_edit_rule(self) -> None:
-        table = self.query_one(DataTable)
-        row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
-        rule_name, rule_expression, rule_enabled = table.get_row(row_key)
-        rule_name, rule_expression, rule_enabled = await self.push_screen_wait(RuleScreen(rule_name, rule_expression, rule_enabled,"edit"))
-        rule.edit_rule(rule_name, rule_expression, rule_enabled)
-        self.rules = rule.load_rules()
-        self.refresh_table()
-        
+        old_name, old_expression, old_enabled, _ = self.get_table_row_values()
+        cursor_row = self.get_table_row_values()[-1]
+        new_name, new_expression, new_enabled = await self.push_screen_wait(RuleScreen(old_name, old_expression, old_enabled, "edit"))
+
+        await manager.edit_rule(old_name, new_expression, new_enabled)
+
+        self.refresh_table(cursor_row)
+
     @work
     async def start_window_watch(self):
-        await watch_screen_title(lambda: self.rules, on_blacklisted=self.handle_blacklisted_window)
+        await watch_screen_title(lambda: manager.get_rules(),on_blacklisted=self.handle_blacklisted_window)
 
     def handle_blacklisted_window(self, window_title: str):
         if isinstance(self.screen, WarningScreen):
@@ -71,31 +83,28 @@ class StopRightThereApp(App):
 
     @work
     async def action_remove_rule(self) -> None:
-        table = self.query_one(DataTable)
-        row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
-        rule_name = table.get_row(row_key)[0]
+        rule_name = self.get_table_row_values()[0]
+        cursor_row = self.get_table_row_values()[-1]
+        confirm = await self.push_screen_wait(ConfirmationScreen(rule_name))
+        if not confirm:
+            return
+
+        await manager.delete_rule(rule_name)
+        self.refresh_table(cursor_row)
         
-        user_confirm = await self.push_screen_wait(ConfirmationScreen(rule_name))
-        if user_confirm:
-            cursor_row = table.cursor_row    
-            rule.delete_rule(rule_name)
-            self.rules = rule.load_rules()
-            self.refresh_table()
-            table.move_cursor(row=cursor_row or 0)
 
     def action_find_window_title(self) -> None:
         self.push_screen(WindowTitleDisplay())
 
-    def action_switch_enable(self) -> None:
-        table = self.query_one(DataTable)
-        row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
-        rule_name, rule_expression, rule_enabled = table.get_row(row_key)
-        rule_enabled = not rule_enabled
-        rule.edit_rule(rule_name, rule_expression, rule_enabled)
-        cursor_row = table.cursor_row
-        self.rules = rule.load_rules()
-        self.refresh_table()
-        table.move_cursor(row=cursor_row or 0)
+    @work
+    async def action_switch_enable(self) -> None:
+        rule_name, expression, enabled, _ = self.get_table_row_values()
+        cursor_row = self.get_table_row_values()[-1]
+        new_enabled = not enabled
+
+        await manager.edit_rule(rule_name, expression, new_enabled)
+
+        self.refresh_table(cursor_row)
 
 if __name__ == "__main__":
     logging.basicConfig(
