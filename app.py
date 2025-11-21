@@ -1,12 +1,14 @@
-from typing import List, Tuple
+"""App Main Screen"""
+import logging
+import os.path
+from typing import Tuple
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, DataTable
 from textual import work
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
 from core.rule import Rule
-import logging
-import os.path
+
 
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
@@ -14,6 +16,7 @@ from screens.confirmation_screen import ConfirmationScreen
 from screens.window_title_display import WindowTitleDisplay
 
 class StopRightThereApp(App):
+    """Entrypoint of the app, displays a table with the rules"""
 
     TITLE = "Stop Right There!"
     CSS_PATH = "styles/app.tcss"
@@ -32,10 +35,15 @@ class StopRightThereApp(App):
         yield Footer()
 
     def on_mount(self) -> None:
+        """Display data after mounting components and start window watcher"""
         self.refresh_table()
         self.start_window_watch()
 
     def refresh_table(self, cursor_row=0):
+        """Clears table data and displays it again
+        Args:
+            cursor_row: Row index of the current cursor position
+            """
         table = self.query_one(DataTable)
         table.clear(columns=True)
 
@@ -47,6 +55,7 @@ class StopRightThereApp(App):
         table.move_cursor(row=cursor_row)
 
     def get_table_row_values(self) -> Tuple:
+        """Returns the values of the table row at the cursor position"""
         table = self.query_one(DataTable)
         row_key, _ = table.coordinate_to_cell_key(table.cursor_coordinate)
         name, expression, enabled = table.get_row(row_key)
@@ -55,6 +64,7 @@ class StopRightThereApp(App):
 
     @work
     async def action_add_rule(self) -> None:
+        """Pushes Rule Screen in add mode"""
         rule_name, rule_expression, rule_enabled = await self.push_screen_wait(RuleScreen("add"))
         cursor_row = self.get_table_row_values()[-1]
         new_rule = Rule(rule_name, rule_expression, rule_enabled)
@@ -64,9 +74,13 @@ class StopRightThereApp(App):
 
     @work
     async def action_edit_rule(self) -> None:
+        """Pushes Rule Screen in edit mode"""
         old_name, old_expression, old_enabled, _ = self.get_table_row_values()
         cursor_row = self.get_table_row_values()[-1]
-        new_name, new_expression, new_enabled = await self.push_screen_wait(RuleScreen(old_name, old_expression, old_enabled, "edit"))
+        _, new_expression, new_enabled = await self.push_screen_wait(RuleScreen(old_name,
+                                                                                old_expression,
+                                                                                old_enabled, "edit")
+                                                                    )
 
         await manager.edit_rule(old_name, new_expression, new_enabled)
 
@@ -74,15 +88,18 @@ class StopRightThereApp(App):
 
     @work
     async def start_window_watch(self):
-        await watch_screen_title(lambda: manager.get_rules(),on_blacklisted=self.handle_blacklisted_window)
+        """Starts the window watcher, assigns get_rules and blacklisted callback function"""
+        await watch_screen_title(manager.get_rules(),on_blacklisted=self.handle_blacklisted_window)
 
-    def handle_blacklisted_window(self, window_title: str):
+    def handle_blacklisted_window(self):
+        """Pushes Warning Screen, prevents WarningScreen mass stacking"""
         if isinstance(self.screen, WarningScreen):
             self.pop_screen()
         self.push_screen(WarningScreen())
 
     @work
     async def action_remove_rule(self) -> None:
+        """Pushes ConfirmationScreen dialog and deletes rule if confirmed"""
         rule_name = self.get_table_row_values()[0]
         cursor_row = self.get_table_row_values()[-1]
         confirm = await self.push_screen_wait(ConfirmationScreen(rule_name))
@@ -91,13 +108,14 @@ class StopRightThereApp(App):
 
         await manager.delete_rule(rule_name)
         self.refresh_table(cursor_row)
-        
 
     def action_find_window_title(self) -> None:
+        """Pushes WindowTitleDisplay Screen"""
         self.push_screen(WindowTitleDisplay())
 
     @work
     async def action_switch_enable(self) -> None:
+        """Switches the enabled attribute of the rule at the current table row of the cursor"""
         rule_name, expression, enabled, _ = self.get_table_row_values()
         cursor_row = self.get_table_row_values()[-1]
         new_enabled = not enabled
@@ -118,7 +136,7 @@ if __name__ == "__main__":
     )
 
     if not os.path.isfile("data/blacklist.json"):
-        with open("data/blacklist.json", "w") as f:
+        with open("data/blacklist.json", "w", encoding="UTF-8") as f:
             f.write("[]")
 
     app = StopRightThereApp()

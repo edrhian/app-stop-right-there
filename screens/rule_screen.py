@@ -1,11 +1,13 @@
+"""Add and edit rule Screen"""
 from textual.app import ComposeResult
 from textual.widgets import Footer, Header, Button, Input, Label, Switch
 from textual.reactive import reactive
 from textual import on
-from textual.screen import ModalScreen    
-from textual.containers import Vertical, Horizontal
+from textual.screen import ModalScreen
+from textual.containers import Vertical
 
 class RuleScreen(ModalScreen[list]):
+    """Screen to add and edit rules"""
 
     CSS_PATH = "../styles/rule_screen.tcss"
 
@@ -28,16 +30,17 @@ class RuleScreen(ModalScreen[list]):
         yield Header()
 
         with Vertical(id="form_container"):
-            yield Label(content="Add New Rule" if self.mode=="add" else "Modify Rule", classes="title")
+            yield Label(content="Add New Rule" if self.mode=="add" else "Modify Rule",
+                        classes="title")
             yield Input(
-                placeholder="Rule Name", 
-                id="input_rule_name", 
-                disabled=(self.mode=="edit"), 
+                placeholder="Rule Name",
+                id="input_rule_name",
+                disabled=(self.mode=="edit"),
                 value="" if self.mode=="add" else self.rule_name,
             )
             yield Input(
-                placeholder="Rule Expression", 
-                id="input_rule_expression", 
+                placeholder="Rule Expression",
+                id="input_rule_expression",
                 value="" if self.mode=="add" else self.rule_expression,
             )
             yield Label(content="Enable the rule?", classes="body_text")
@@ -46,15 +49,16 @@ class RuleScreen(ModalScreen[list]):
                 value=True,
                 )
             yield Button(variant="success", label="Submit")
-            
         yield Footer()
 
     @on(Button.Pressed)
     def action_confirm_add_rule(self):
+        """Returns to the last screen and sends rule attributes from input components to it"""
         self.dismiss([self.rule_name, self.rule_expression, self.rule_enabled])
 
     @on(Input.Changed)
     def on_input_changed(self, event: Input.Changed) -> None:
+        """Changes values when modifying rule attributes from input components"""
         input_widget = event.input
 
         if input_widget.id == "input_rule_name":
@@ -65,7 +69,7 @@ class RuleScreen(ModalScreen[list]):
 
     @on(Switch.Changed)
     def on_switch_changed(self, event: Switch.Changed) -> None:
+        """Changes values when modifying rule attributes from switch components"""
         switch_widget = event.switch
-        
         if switch_widget.id == "input_rule_enabled":
             self.rule_enabled = switch_widget.value

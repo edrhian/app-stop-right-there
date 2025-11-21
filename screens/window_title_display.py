@@ -1,3 +1,4 @@
+"""Window Scanner Screen"""
 import asyncio
 from textual.app import ComposeResult
 from textual.widgets import Footer, Header, Label
@@ -5,13 +6,17 @@ from textual import work
 from textual.screen import ModalScreen
 from textual.containers import Vertical, ScrollableContainer
 from textual.reactive import reactive
-from textual.binding import Binding
 
 from core.window_manager import get_window_title
 
 DESCRIPTION = """This screen lets you know what is the exact title that the app reads"""
 
 class WindowTitleDisplay(ModalScreen):
+    """Screen that let's the user display the exact title of the active window"""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.scan_list: ScrollableContainer
 
     BINDINGS = [
         ("escape", "cancel", "Cancel"),
@@ -29,18 +34,22 @@ class WindowTitleDisplay(ModalScreen):
         with Vertical(id="window_title_display_container"):
             yield Label(DESCRIPTION, classes="title")
             yield Label("> Press 's' to start/stop scanning every 1 second", classes="subtitle")
-            self.scan_state_label = Label(f"Scanning: {self.is_scanning}", id="scan_state", classes="subtitle")
+            self.scan_state_label = Label(f"Scanning: {self.is_scanning}",
+                                          id="scan_state",
+                                          classes="subtitle")
             yield self.scan_state_label
 
-            self.scan_list = ScrollableContainer(id="scan_list") 
+            self.scan_list = ScrollableContainer(id="scan_list")
             yield self.scan_list
 
         yield Footer()
 
     def action_cancel(self) -> None:
+        """Returns to the last Screen without sending data"""
         self.dismiss()
 
     def watch_is_scanning(self) -> None:
+        """Watches is_scanning reactive variable"""
         if self.scan_state_label:
             self.scan_state_label.update(f"Scanning: {self.is_scanning}")
 
@@ -62,4 +71,5 @@ class WindowTitleDisplay(ModalScreen):
             await asyncio.sleep(1)
 
     def action_clear_list(self):
+        """Clears the scan_list labels"""
         self.scan_list.remove_children()

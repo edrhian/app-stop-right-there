@@ -1,11 +1,11 @@
+"""Delete Rule confirmation dialog"""
 from textual.app import ComposeResult
-from textual.widgets import Footer, Header, Button, Label, Digits
-from textual import on
-from textual.screen import Screen, ModalScreen
-from textual.containers import Vertical, Horizontal, Center
-from textual.reactive import reactive
+from textual.widgets import Footer, Header, Label
+from textual.screen import ModalScreen
+from textual.containers import Vertical
 
 class ConfirmationScreen(ModalScreen):
+    """Screen that displays a confirmation dialog"""
 
     def __init__(self, rule_name):
         super().__init__()
@@ -27,8 +27,9 @@ class ConfirmationScreen(ModalScreen):
         yield Footer()
 
     def action_cancel(self) -> None:
+        """Cancels deletion and returns to the last screens"""
         self.dismiss(False)
 
     def action_confirm_deletion(self) -> None:
+        """Confirms the deletion and returns to the last screens"""
         self.dismiss(True)
-        
