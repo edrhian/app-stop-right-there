@@ -5,15 +5,16 @@ from typing import Tuple
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, DataTable
 from textual import work
+from textual.reactive import reactive
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
 from core.rule import Rule
-
 
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
 from screens.confirmation_screen import ConfirmationScreen
 from screens.window_title_display import WindowTitleDisplay
+from components.sidebar import Sidebar
 
 class StopRightThereApp(App):
     """Entrypoint of the app, displays a table with the rules"""
@@ -26,11 +27,15 @@ class StopRightThereApp(App):
         ("e", "edit_rule", "Edit Rule"),
         ("r", "remove_rule", "Remove Rule"),
         ("s", "find_window_title", "Window Title Finder"),
-        ("d", "switch_enable", "Enable/Disable Rule")
+        ("d", "switch_enable", "Enable/Disable Rule"),
+        ("t", "toggle_sidebar", "Toggle Sidebar")
     ]
+
+    show_sidebar = reactive(False)
 
     def compose(self) -> ComposeResult:
         yield Header()
+        yield Sidebar()
         yield DataTable(zebra_stripes=True,cursor_type="row",id="rule_list")
         yield Footer()
 
@@ -38,6 +43,14 @@ class StopRightThereApp(App):
         """Display data after mounting components and start window watcher"""
         self.refresh_table()
         self.start_window_watch()
+
+    def action_toggle_sidebar(self) -> None:
+        """Toggle the sidebar visibility."""
+        self.show_sidebar = not self.show_sidebar
+
+    def watch_show_sidebar(self, show_sidebar: bool) -> None:
+        """Set or unset visible class when reactive changes."""
+        self.query_one(Sidebar).set_class(show_sidebar, "-visible")
 
     def refresh_table(self, cursor_row=0):
         """Clears table data and displays it again
@@ -89,13 +102,13 @@ class StopRightThereApp(App):
     @work
     async def start_window_watch(self):
         """Starts the window watcher, assigns get_rules and blacklisted callback function"""
-        await watch_screen_title(manager.get_rules(),on_blacklisted=self.handle_blacklisted_window)
+        await watch_screen_title(manager.get_rules,on_blacklisted=self.handle_blacklisted_window)
 
-    def handle_blacklisted_window(self):
+    def handle_blacklisted_window(self, broken_rule: str):
         """Pushes Warning Screen, prevents WarningScreen mass stacking"""
         if isinstance(self.screen, WarningScreen):
             self.pop_screen()
-        self.push_screen(WarningScreen())
+        self.push_screen(WarningScreen(broken_rule))
 
     @work
     async def action_remove_rule(self) -> None:

@@ -12,8 +12,10 @@ class WarningScreen(ModalScreen):
     dismiss_button: Button
     tick_timer: Timer
 
-    def __init__(self):
+    def __init__(self, broken_rule=""):
         super().__init__()
+        self.broken_rule = broken_rule
+
 
     CSS_PATH = "../styles/warning_screen.tcss"
     time_left = reactive(5)
@@ -46,6 +48,7 @@ class WarningScreen(ModalScreen):
     def compose(self) -> ComposeResult:
         with Vertical(id="warning_container", classes="dialog_box"):
             yield Label("Stop Right There!",classes="warning_text")
+            yield Label(f"You just broke the {self.broken_rule} Rule!",classes="warning_text")
             yield Label("Wait",classes="warning_text")
             yield Digits()
             yield Label("Before continue",classes="warning_text")

@@ -51,7 +51,7 @@ async def watch_screen_title(get_rules, on_blacklisted, interval: float = 1.0):
         for rule in rules:
             if rule.enabled and rule.matches(title):
                 force_focus_console()
-                on_blacklisted(title)
+                on_blacklisted(rule.name)
         if title != last_title:
             logging.info("Active window: %s", title)
 
