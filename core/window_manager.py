@@ -36,7 +36,12 @@ def get_window_title() -> Optional[str]:
 
 async def watch_screen_title(get_rules, on_blacklisted, interval: float = 1.0):
     """Continuously reads the active window title 
-    and checks if the title matches any blacklisted rules"""
+    and checks if the title matches any blacklisted rules
+    
+    Args:
+        get_rules: Function
+        on_blacklisted: Callback function
+    """
     last_title = None
     while True:
         rules = get_rules()

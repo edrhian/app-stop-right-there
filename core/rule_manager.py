@@ -43,7 +43,11 @@ class RuleManager:
             json.dump(data, f, indent=2)
 
     async def create_rule(self, rule: Rule) -> None:
-        """Creates a rule if is validated and adds to rules list, calls save"""
+        """Creates a rule if is validated and adds to rules list, calls save
+        
+        Args:
+            rule: Rule object
+        """
         async with self._lock:
             if any(r.name == rule.name for r in self.rules):
                 raise ValueError(f"Rule '{rule.name}' already exists.")
@@ -53,7 +57,13 @@ class RuleManager:
             self._save()
 
     async def edit_rule(self, name: str, expr: str, enabled: bool) -> bool:
-        """Edits a rule if it's name exists"""
+        """Edits a rule if it's name exists
+        
+        Args:
+            name: Name of the rule
+            expr: Regular expression of the rule
+            enabled: If the rule is applied
+        """
         async with self._lock:
             for rule in self.rules:
                 if rule.name == name:
@@ -65,7 +75,11 @@ class RuleManager:
         return False
 
     async def delete_rule(self, name: str) -> bool:
-        """Deletes a rule from rule list and saves the list"""
+        """Deletes a rule from rule list and saves the list
+        
+        Args:
+            name: Name of the rule
+        """
         async with self._lock:
             for rule in self.rules:
                 if rule.name == name:

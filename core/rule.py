@@ -14,7 +14,11 @@ class Rule:
         return self.enabled and re.search(self.expression, text) is not None
 
 def validate_rule(rule: Rule):
-    """Validates the rule attributes"""
+    """Validates the rule attributes
+    
+    Args:
+        rule: Rule object
+    """
     if not rule.name.strip():
         raise ValueError("Rule name cannot be empty")
 
