@@ -19,7 +19,6 @@ class WindowTitleDisplay(ModalScreen):
         self.scan_list: ScrollableContainer
 
     BINDINGS = [
-        ("escape", "cancel", "Cancel"),
         ("s", "scan_switch", "Start/Stop Scanning"),
         ("c", "clear_list", "Clear Scan List"),
     ]
