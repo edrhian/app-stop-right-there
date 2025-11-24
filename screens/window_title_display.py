@@ -8,6 +8,8 @@ from textual.containers import Vertical, ScrollableContainer
 from textual.reactive import reactive
 
 from core.window_manager import get_window_title
+from navigation.navigation_screen import NavigationScreen
+from navigation.screen_list import SCREEN_LIST
 
 DESCRIPTION = """This screen lets you know what is the exact title that the app reads"""
 
@@ -19,6 +21,7 @@ class WindowTitleDisplay(ModalScreen):
         self.scan_list: ScrollableContainer
 
     BINDINGS = [
+        ("t", "show_screen_nav", "Navigation Menu"),
         ("s", "scan_switch", "Start/Stop Scanning"),
         ("c", "clear_list", "Clear Scan List"),
     ]
@@ -42,6 +45,10 @@ class WindowTitleDisplay(ModalScreen):
             yield self.scan_list
 
         yield Footer()
+
+    def action_show_screen_nav(self) -> None:
+        """Toggle the sidebar visibility."""
+        self.app.push_screen(NavigationScreen(disabled_screen_id="window_title_display", screen_list=SCREEN_LIST))
 
     def action_cancel(self) -> None:
         """Returns to the last Screen without sending data"""

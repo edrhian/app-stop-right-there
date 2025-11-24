@@ -10,11 +10,16 @@ from core.window_manager import watch_screen_title
 from core.rule_manager import manager
 from core.rule import Rule
 
-from screens.navigation_screen import NavigationScreen
+from navigation.navigation_screen import NavigationScreen
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
 from screens.confirmation_screen import ConfirmationScreen
 from screens.window_title_display import WindowTitleDisplay
+from navigation.screen_list import SCREEN_LIST
+
+for screen in SCREEN_LIST:
+    if screen["id"] == "window_title_display":
+        screen["screen_class"] = WindowTitleDisplay
 
 class StopRightThereApp(App):
     """Entrypoint of the app, displays a table with the rules"""
@@ -23,11 +28,11 @@ class StopRightThereApp(App):
     CSS_PATH = "styles/app.tcss"
 
     BINDINGS = [
+        ("t", "show_screen_nav", "Navigation Menu"),
         ("a", "add_rule", "Add New Rule"),
         ("e", "edit_rule", "Edit Rule"),
         ("r", "remove_rule", "Remove Rule"),
         ("d", "switch_enable", "Enable/Disable Rule"),
-        ("s", "show_screen_nav", "Toggle Sidebar")
     ]
 
     show_screen_nav = reactive(False)
@@ -44,7 +49,7 @@ class StopRightThereApp(App):
 
     def action_show_screen_nav(self) -> None:
         """Toggle the sidebar visibility."""
-        self.push_screen(NavigationScreen(disabled_screen_id="home_screen"))
+        self.push_screen(NavigationScreen(disabled_screen_id="home_screen", screen_list=SCREEN_LIST))
 
     def refresh_table(self, cursor_row=0):
         """Clears table data and displays it again

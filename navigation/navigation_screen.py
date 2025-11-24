@@ -1,6 +1,6 @@
 import logging
 import os.path
-from typing import Tuple
+from typing import List, Sequence, Tuple, TypedDict
 from textual.app import App, ComposeResult
 import textual
 from textual.widgets import Footer, Header, DataTable, OptionList, Label
@@ -12,11 +12,7 @@ from textual.containers import Vertical
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
 from core.rule import Rule
-
-from screens.rule_screen import RuleScreen
-from screens.warning_screen import WarningScreen
-from screens.confirmation_screen import ConfirmationScreen
-from screens.window_title_display import WindowTitleDisplay
+from navigation.screen_list import ScreenItem
 
 class NavigationScreen(ModalScreen):
     
@@ -39,15 +35,16 @@ class NavigationScreen(ModalScreen):
         ("s", "app.pop_screen", "Cancel")
     ]
 
-    def __init__(self, disabled_screen_id) -> None:
+    def __init__(self, disabled_screen_id: str, screen_list: Sequence[ScreenItem]) -> None:
         super().__init__()
         self.disabled_screen = disabled_screen_id
 
-        self.options = [
-            Option(prompt="Home",id="home_screen"),
-            Option(prompt="Window Title Display",id="window_title_display_screen"),
-            Option(prompt="Configuration",id="configuration_screen")
-        ]
+        self.screen_list = screen_list
+
+        self.options = []
+
+        for screen in self.screen_list:
+            self.options.append(Option(prompt=screen['prompt'], id=screen['id']))
 
         for option in self.options:
             if option.id == disabled_screen_id:
@@ -63,12 +60,17 @@ class NavigationScreen(ModalScreen):
 
     def on_option_list_option_selected(self, message: OptionList.OptionSelected):
         target_screen = message.option.id
-        if target_screen == "home_screen":
-            self.app.pop_screen()
 
-        if target_screen == "window_title_display_screen":
-            self.app.pop_screen()
-            self.app.push_screen(WindowTitleDisplay())
+        for screen in self.screen_list:
+            if screen["id"] == target_screen:
+                screen_class = screen["screen_class"]
 
-        else:
-            self.dismiss()
+                if screen_class is None:
+                    while len(self.app.screen_stack) > 1:
+                        self.app.pop_screen()
+                    return
+                
+                self.app.push_screen(screen_class())
+                return
+
+        self.dismiss()
