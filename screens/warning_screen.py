@@ -1,4 +1,6 @@
 """Warning Popup Screen"""
+
+from config.config import load_config
 from textual.app import ComposeResult
 from textual.widgets import Footer, Button, Label, Digits
 from textual import on
@@ -15,13 +17,14 @@ class WarningScreen(ModalScreen):
     def __init__(self, broken_rule=""):
         super().__init__()
         self.broken_rule = broken_rule
-
-
+        
     CSS_PATH = "../styles/warning_screen.tcss"
     time_left = reactive(5)
 
     def on_mount(self) -> None:
         """On mount WarningScreen"""
+        self.config = load_config(path="config/config.yaml")
+        self.time_left = self.config['timer']['duration_seconds']
         self.dismiss_button = self.query_one(Button)
         self.dismiss_button.add_class("hidden")
         self.set_focus(self.dismiss_button)

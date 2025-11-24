@@ -12,6 +12,7 @@ from core.rule import Rule
 
 from navigation.navigation_screen import NavigationScreen
 from navigation.screen_list import SCREEN_LIST
+from screens.configuration_screen import ConfigurationScreen
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
 from screens.confirmation_screen import ConfirmationScreen
@@ -21,6 +22,8 @@ from screens.window_title_display import WindowTitleDisplay
 for screen in SCREEN_LIST:
     if screen["id"] == "window_title_display":
         screen["screen_class"] = WindowTitleDisplay
+    if screen["id"] == "configuration_screen":
+        screen["screen_class"] = ConfigurationScreen
 
 class StopRightThereApp(App):
     """Entrypoint of the app, displays a table with the rules"""

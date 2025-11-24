@@ -11,7 +11,7 @@ class ScreenItem(TypedDict):
 SCREEN_LIST: List[ScreenItem] = [
     {
         "id": "home_screen",
-        "prompt": "Home Screen",
+        "prompt": "Home",
         "screen_class": None
     },
     {
@@ -19,4 +19,9 @@ SCREEN_LIST: List[ScreenItem] = [
         "prompt": "Window Title Display",
         "screen_class": None
     },
+    {
+        "id": "configuration_screen",
+        "prompt": "Configuration",
+        "screen_class": None
+    }
 ]
