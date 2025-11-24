@@ -1,7 +1,9 @@
+"""Screen List"""
 from typing import List, Type, TypedDict
 from textual.screen import Screen
 
 class ScreenItem(TypedDict):
+    """Data structure required to display and navigate between screens in NavigationScreen"""
     id: str
     prompt: str
     screen_class: Type[Screen] | None

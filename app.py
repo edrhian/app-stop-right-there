@@ -11,12 +11,13 @@ from core.rule_manager import manager
 from core.rule import Rule
 
 from navigation.navigation_screen import NavigationScreen
+from navigation.screen_list import SCREEN_LIST
 from screens.rule_screen import RuleScreen
 from screens.warning_screen import WarningScreen
 from screens.confirmation_screen import ConfirmationScreen
 from screens.window_title_display import WindowTitleDisplay
-from navigation.screen_list import SCREEN_LIST
 
+# Set screen classes, prevents circular import
 for screen in SCREEN_LIST:
     if screen["id"] == "window_title_display":
         screen["screen_class"] = WindowTitleDisplay
@@ -120,10 +121,6 @@ class StopRightThereApp(App):
 
         await manager.delete_rule(rule_name)
         self.refresh_table(cursor_row)
-
-    # def action_find_window_title(self) -> None:
-    #     """Pushes WindowTitleDisplay Screen"""
-    #     self.push_screen(WindowTitleDisplay())
 
     @work
     async def action_switch_enable(self) -> None:
