@@ -4,7 +4,14 @@ import logging
 from typing import Optional
 from ctypes import windll
 import win32gui
+import os
+import webbrowser
 
+def force_focus_html():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    html_path = os.path.join(base_dir, '..', 'screens', 'html', 'warning_screen.html')
+    html_path = os.path.abspath(html_path)
+    webbrowser.open('file://' + html_path)
 
 def force_focus_console():
     """Forces the console window to the foreground"""
@@ -34,7 +41,7 @@ def get_window_title() -> Optional[str]:
 
     return win32gui.GetWindowText(hwnd)
 
-async def watch_screen_title(get_rules, on_blacklisted, interval: float = 1.0):
+async def watch_screen_title(get_rules, on_blacklisted, popup_window = "console", interval: float = 1.0):
     """Continuously reads the active window title 
     and checks if the title matches any blacklisted rules
     
@@ -50,7 +57,10 @@ async def watch_screen_title(get_rules, on_blacklisted, interval: float = 1.0):
         title = title or ""
         for rule in rules:
             if rule.enabled and rule.matches(title):
-                force_focus_console()
+                if popup_window == "console":
+                    force_focus_console()
+                else:
+                    force_focus_html()
                 on_blacklisted(rule.name)
         if title != last_title:
             logging.info("Active window: %s", title)
