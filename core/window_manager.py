@@ -41,7 +41,7 @@ def get_window_title() -> Optional[str]:
 
     return win32gui.GetWindowText(hwnd)
 
-async def watch_screen_title(get_rules, on_blacklisted, popup_window = "console", interval: float = 1.0):
+async def watch_screen_title(get_rules, on_blacklisted, popup_mode = "console", interval: float = 1.0):
     """Continuously reads the active window title 
     and checks if the title matches any blacklisted rules
     
@@ -57,7 +57,7 @@ async def watch_screen_title(get_rules, on_blacklisted, popup_window = "console"
         title = title or ""
         for rule in rules:
             if rule.enabled and rule.matches(title):
-                if popup_window == "console":
+                if popup_mode == "console":
                     force_focus_console()
                 else:
                     force_focus_html()

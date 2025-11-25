@@ -6,6 +6,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, DataTable
 from textual import work
 from textual.reactive import reactive
+from config.config import load_config
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
 from core.rule import Rule
@@ -48,6 +49,8 @@ class StopRightThereApp(App):
 
     def on_mount(self) -> None:
         """Display data after mounting components and start window watcher"""
+        self.config = load_config(path="config/config.yaml")
+        self.popup_mode = self.config['popup']['mode']
         self.refresh_table()
         self.start_window_watch()
 
@@ -105,7 +108,7 @@ class StopRightThereApp(App):
     @work
     async def start_window_watch(self):
         """Starts the window watcher, assigns get_rules and blacklisted callback function"""
-        await watch_screen_title(manager.get_rules,on_blacklisted=self.handle_blacklisted_window)
+        await watch_screen_title(manager.get_rules,on_blacklisted=self.handle_blacklisted_window,popup_mode=self.popup_mode)
 
     def handle_blacklisted_window(self, broken_rule: str):
         """Pushes Warning Screen, prevents WarningScreen mass stacking"""

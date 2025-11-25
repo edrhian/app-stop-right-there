@@ -1,2 +1,4 @@
 timer:
   duration_seconds: 5
+popup:
+  mode: "html"
