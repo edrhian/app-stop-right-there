@@ -26,7 +26,7 @@ class WarningScreen(ModalScreen):
         self.config = load_config(path="config/config.yaml")
         self.time_left = self.config['timer']['duration_seconds']
         self.dismiss_button = self.query_one(Button)
-        self.dismiss_button.add_class("hidden")
+        self.dismiss_button.disabled = True
         self.set_focus(self.dismiss_button)
         self.tick_timer = self.set_interval(1, self.tick)
 
@@ -46,7 +46,7 @@ class WarningScreen(ModalScreen):
 
     def show_button(self) -> None:
         """Changes button class to show it"""
-        self.dismiss_button.remove_class("hidden")
+        self.dismiss_button.disabled = False
 
     def compose(self) -> ComposeResult:
         with Vertical(id="warning_container", classes="dialog_box"):
