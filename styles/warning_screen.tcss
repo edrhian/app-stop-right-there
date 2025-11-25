@@ -15,4 +15,5 @@ Label.warning_text {
 
 Digits {
     width: auto;
+    margin: 0 1 0 1;
 }
