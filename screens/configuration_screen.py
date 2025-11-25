@@ -2,7 +2,8 @@ from textual import on
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
 from textual.containers import Vertical
-from textual.widgets import Header, Footer, Label, Input, Button
+from textual.widgets import Header, Footer, Label, Input, Button, OptionList
+from textual.widgets.option_list import Option
 from textual.reactive import reactive
 from textual.validation import Number
 
@@ -16,14 +17,20 @@ class ConfigurationScreen(ModalScreen):
 
     BINDINGS = [
         ("t", "show_screen_nav", "Navigation Menu")
-    ]
+    ]    
 
     def on_mount(self):
+        """Sets the inputs values to the current configuration"""
+        popup_index = ['console','html']
         self.config = load_config(path="config/config.yaml")
         self.duration = self.config['timer']['duration_seconds']
+        self.popup_mode = self.config['popup']['mode']
 
         duration_input = self.query_one("#duration_input", Input)
         duration_input.value = str(self.duration)
+
+        popup_mode_option_list = self.query_one("#popup_mode_option_list", OptionList)
+        popup_mode_option_list.highlighted = popup_index.index(self.popup_mode)
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -41,6 +48,12 @@ class ConfigurationScreen(ModalScreen):
                         Number(minimum=1)
                     ]
                 )
+            yield OptionList(
+                Option("Terminal", id="console_option"),
+                Option("HTML Page", id="html_option"),
+                classes="configuration_option_list",
+                id="popup_mode_option_list"
+            )
             yield Button(variant="success", label="Save Changes",id="save_config_button")
         yield Footer()
 
@@ -68,8 +81,18 @@ class ConfigurationScreen(ModalScreen):
         if button_id == "save_config_button":
             self.change_config_values()
             save_config(path="config/config.yaml", config=self.config)
-            self.app.pop_screen()
+
+        self.app.pop_screen()
 
     def change_config_values(self) -> None:
         duration_input = self.query_one("#duration_input", Input)
         self.config['timer']['duration_seconds'] = int(duration_input.value)
+
+        popup_mode_option_list = self.query_one("#popup_mode_option_list", OptionList)
+        selected_popup_mode_option = popup_mode_option_list.highlighted_option
+
+        if selected_popup_mode_option is not None:
+            if selected_popup_mode_option.id == "console_option":
+                self.config['popup']['mode'] = "console"
+            else:
+                self.config['popup']['mode'] = "html"

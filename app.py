@@ -1,11 +1,13 @@
 """App Main Screen"""
 import logging
 import os.path
-from typing import Tuple
+from typing import Tuple, Type
 from textual.app import App, ComposeResult
+from textual.driver import Driver
 from textual.widgets import Footer, Header, DataTable
 from textual import work
 from textual.reactive import reactive
+from textual.signal import Signal
 from config.config import load_config
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
@@ -27,7 +29,7 @@ for screen in SCREEN_LIST:
         screen["screen_class"] = ConfigurationScreen
 
 class StopRightThereApp(App):
-    """Entrypoint of the app, displays a table with the rules"""
+    """Entrypoint of the app, displays a table with the rules"""        
 
     TITLE = "Stop Right There!"
     CSS_PATH = "styles/app.tcss"

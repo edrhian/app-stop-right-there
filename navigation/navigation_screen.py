@@ -9,7 +9,7 @@ from navigation.screen_list import ScreenItem
 class NavigationScreen(ModalScreen):
     """Screen that lets the user navigate between screens"""
     DEFAULT_CSS = """
-        OptionList {
+        #navigation_option_list {
             align: center middle;
         }
         Label.header1 {
@@ -47,7 +47,7 @@ class NavigationScreen(ModalScreen):
     def compose(self):
         with Vertical(classes="nav_container"):
             yield Label("Screen Navigator",classes="header1")
-            option_list = OptionList()
+            option_list = OptionList(id="navigation_option_list")
             option_list.add_options(self.options)
             yield option_list
 
