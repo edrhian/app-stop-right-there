@@ -59,11 +59,14 @@ class NavigationScreen(ModalScreen):
             if screen["id"] == target_screen:
                 screen_class = screen["screen_class"]
 
+                # Pop all screens before stack another
+                while len(self.app.screen_stack) > 1:
+                    self.app.pop_screen()
+
                 # Only Home Screen (the app entrypoint) has no class
-                if screen_class is None:
-                    while len(self.app.screen_stack) > 1:
-                        self.app.pop_screen()
+                if screen_class is None:    
                     return
+
                 self.app.push_screen(screen_class())
                 return
 
