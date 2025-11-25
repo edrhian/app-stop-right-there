@@ -24,6 +24,11 @@ Label.body_text {
     margin: 1 2 1 2;
 }
 
+Button {
+    align: center middle;
+    margin: 1 2 1 2;
+}
+
 .title {
     text-style: bold;
     margin: 1 2 1 2;
