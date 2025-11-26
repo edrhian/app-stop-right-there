@@ -1,3 +1,4 @@
+"""Configuration Screen"""
 import sys
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
@@ -10,16 +11,18 @@ from navigation.navigation_screen import NavigationScreen
 from navigation.screen_list import SCREEN_LIST
 
 class ConfigurationScreen(ModalScreen):
+    """
+    Screen that allows the user to modify the configuration of the App
+    """
 
     AUTO_FOCUS = "Label"
 
     BINDINGS = [
         ("t", "show_screen_nav", "Navigation Menu")
-    ]    
+    ]
 
     def on_mount(self):
         """Sets the inputs values to the current configuration"""
-        popup_index = ['console','html']
         self.config = load_config(path="config/config.yaml")
         self.duration = self.config['timer']['duration_seconds']
         self.popup_mode = self.config['popup']['mode']
@@ -39,7 +42,7 @@ class ConfigurationScreen(ModalScreen):
             yield Label("(how much time you have to wait before the dismiss button appears when breaking a rule)",
                         classes="subtitle")
             yield Input(
-                    placeholder=f"Duration",
+                    placeholder="Duration",
                     id="duration_input",
                     value="",
                     type="integer",
@@ -77,14 +80,14 @@ class ConfigurationScreen(ModalScreen):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Event handler called when a button is pressed."""
         button_id = event.button.id
-        
+        # Save teh configuration and restart the app
         if button_id == "save_config_button":
             self.change_config_values()
-            save_config(path="config/config.yaml", config=self.config)
-            
+            save_config(path="config/config.yaml", configuration=self.config)
             self.restart_in_new_terminal()
 
     def change_config_values(self) -> None:
+        """Get all input values and modify the configuration"""
         duration_input = self.query_one("#duration_input", Input)
         self.config['timer']['duration_seconds'] = int(duration_input.value)
 
@@ -95,4 +98,5 @@ class ConfigurationScreen(ModalScreen):
             self.config['popup']['mode'] = selected_popup_mode_option.id
 
     def restart_in_new_terminal(self):
+        """Exit the program with code 99 (restart)"""
         sys.exit(99)
