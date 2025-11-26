@@ -2,8 +2,7 @@ import sys
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
 from textual.containers import Vertical
-from textual.widgets import Header, Footer, Label, Input, Button, OptionList
-from textual.widgets.option_list import Option
+from textual.widgets import Header, Footer, Label, Input, Button, RadioSet, RadioButton
 from textual.validation import Number
 
 from config.config import load_config, save_config
@@ -28,8 +27,9 @@ class ConfigurationScreen(ModalScreen):
         duration_input = self.query_one("#duration_input", Input)
         duration_input.value = str(self.duration)
 
-        popup_mode_option_list = self.query_one("#popup_mode_option_list", OptionList)
-        popup_mode_option_list.highlighted = popup_index.index(self.popup_mode)
+        popup_mode_radio_set = self.query_one("#popup_mode_radio_set", RadioSet)
+        radio_button = popup_mode_radio_set.query_one(f"#{self.popup_mode}", RadioButton)
+        radio_button.value = True
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -51,12 +51,9 @@ class ConfigurationScreen(ModalScreen):
             yield Label("Mode",classes="body_text")
             yield Label("(the way that the app warns you when breaking a rule)",
                         classes="subtitle")
-            yield OptionList(
-                Option("Terminal", id="console_option"),
-                Option("HTML Page", id="html_option"),
-                classes="configuration_option_list",
-                id="popup_mode_option_list"
-            )
+            with RadioSet(id="popup_mode_radio_set"):
+                yield RadioButton("Terminal", id="console")
+                yield RadioButton("HTML Page", id="html")
             yield Button(variant="success", label="Save Changes",id="save_config_button")
         yield Footer()
 
@@ -91,14 +88,11 @@ class ConfigurationScreen(ModalScreen):
         duration_input = self.query_one("#duration_input", Input)
         self.config['timer']['duration_seconds'] = int(duration_input.value)
 
-        popup_mode_option_list = self.query_one("#popup_mode_option_list", OptionList)
-        selected_popup_mode_option = popup_mode_option_list.highlighted_option
+        popup_mode_radio_set = self.query_one("#popup_mode_radio_set", RadioSet)
+        selected_popup_mode_option = popup_mode_radio_set.pressed_button
 
         if selected_popup_mode_option is not None:
-            if selected_popup_mode_option.id == "console_option":
-                self.config['popup']['mode'] = "console"
-            else:
-                self.config['popup']['mode'] = "html"
+            self.config['popup']['mode'] = selected_popup_mode_option.id
 
     def restart_in_new_terminal(self):
         sys.exit(99)
