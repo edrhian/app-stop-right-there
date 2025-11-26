@@ -49,6 +49,10 @@ class ConfigurationScreen(ModalScreen):
                         Number(minimum=1)
                     ]
                 )
+            yield Label("Popup Window",classes="title")
+            yield Label("Mode",classes="body_text")
+            yield Label("(the way that the app warns you when breaking a rule)",
+                        classes="subtitle")
             yield OptionList(
                 Option("Terminal", id="console_option"),
                 Option("HTML Page", id="html_option"),
