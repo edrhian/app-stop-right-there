@@ -51,7 +51,7 @@ class ConfigurationScreen(ModalScreen):
             yield Label("Mode",classes="body_text")
             yield Label("(the way that the app warns you when breaking a rule)",
                         classes="subtitle")
-            with RadioSet(id="popup_mode_radio_set"):
+            with RadioSet(id="popup_mode_radio_set",classes="configuration_radio_set"):
                 yield RadioButton("Terminal", id="console")
                 yield RadioButton("HTML Page", id="html")
             yield Button(variant="success", label="Save Changes",id="save_config_button")

@@ -33,6 +33,10 @@ OptionList.configuration_option_list {
     margin: 1;
 }
 
+RadioSet.configuration_radio_set {
+    margin: 1;
+}
+
 .title {
     text-style: bold;
     margin: 1 2 1 2;
