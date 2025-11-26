@@ -1,11 +1,9 @@
 import sys
-from textual import on
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
 from textual.containers import Vertical
 from textual.widgets import Header, Footer, Label, Input, Button, OptionList
 from textual.widgets.option_list import Option
-from textual.reactive import reactive
 from textual.validation import Number
 
 from config.config import load_config, save_config
@@ -104,4 +102,3 @@ class ConfigurationScreen(ModalScreen):
 
     def restart_in_new_terminal(self):
         sys.exit(99)
-

@@ -1,13 +1,11 @@
 """App Main Screen"""
 import logging
 import os.path
-from typing import Tuple, Type
+from typing import Tuple
 from textual.app import App, ComposeResult
-from textual.driver import Driver
 from textual.widgets import Footer, Header, DataTable
 from textual import work
 from textual.reactive import reactive
-from textual.signal import Signal
 from config.config import load_config
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
