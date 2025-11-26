@@ -1,3 +1,4 @@
+import sys
 from textual import on
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
@@ -81,8 +82,8 @@ class ConfigurationScreen(ModalScreen):
         if button_id == "save_config_button":
             self.change_config_values()
             save_config(path="config/config.yaml", config=self.config)
-
-        self.app.pop_screen()
+            
+            self.restart_in_new_terminal()
 
     def change_config_values(self) -> None:
         duration_input = self.query_one("#duration_input", Input)
@@ -96,3 +97,7 @@ class ConfigurationScreen(ModalScreen):
                 self.config['popup']['mode'] = "console"
             else:
                 self.config['popup']['mode'] = "html"
+
+    def restart_in_new_terminal(self):
+        sys.exit(99)
+
