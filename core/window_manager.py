@@ -3,9 +3,9 @@ import asyncio
 import logging
 from typing import Optional
 from ctypes import windll
-import win32gui
 import os
 import webbrowser
+import win32gui
 
 def force_focus_html():
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -55,13 +55,16 @@ async def watch_screen_title(get_rules, on_blacklisted, popup_mode = "console", 
 
         title = await asyncio.to_thread(get_window_title)
         title = title or ""
-        for rule in rules:
-            if rule.enabled and rule.matches(title):
-                if popup_mode == "console":
-                    force_focus_console()
-                else:
-                    force_focus_html()
-                on_blacklisted(rule.name)
+
+        # Do not check rules if the user is in the App, prevents the user from blacklisting the App
+        if title.find("StopRightThereApp") == -1 and title.find("Windows PowerShell"):
+            for rule in rules:
+                if rule.enabled and rule.matches(title):
+                    if popup_mode == "console":
+                        force_focus_console()
+                    else:
+                        force_focus_html()
+                    on_blacklisted(rule.name)
         if title != last_title:
             logging.info("Active window: %s", title)
 
