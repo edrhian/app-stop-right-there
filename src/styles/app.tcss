@@ -47,6 +47,12 @@ RadioSet.configuration_radio_set {
     margin: 1 2 1 2;
 }
 
+.important_text {
+    text-style: bold;
+    color: red;
+    margin: 1 2 1 2;
+}
+
 .dialog_box {
     align: center middle;
     border: white round;

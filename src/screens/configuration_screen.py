@@ -57,6 +57,8 @@ class ConfigurationScreen(ModalScreen):
             with RadioSet(id="popup_mode_radio_set",classes="configuration_radio_set"):
                 yield RadioButton("Terminal", id="console")
                 yield RadioButton("HTML Page", id="html")
+            yield Label("The app will exit after applying the changes, you must rerun the app manually",
+                        classes="important_text")
             yield Button(variant="success", label="Save Changes",id="save_config_button")
         yield Footer()
 
