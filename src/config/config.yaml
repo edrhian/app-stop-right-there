@@ -1,4 +1,4 @@
 popup:
-  mode: html
+  mode: console
 timer:
   duration_seconds: 5
