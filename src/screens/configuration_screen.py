@@ -2,7 +2,7 @@
 import sys
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
-from textual.containers import Vertical
+from textual.containers import VerticalScroll
 from textual.widgets import Header, Footer, Label, Input, Button, RadioSet, RadioButton
 from textual.validation import Number
 
@@ -37,7 +37,7 @@ class ConfigurationScreen(ModalScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with Vertical():
+        with VerticalScroll():
             yield Label("Timer Settings", classes="title")
             yield Label("Duration",classes="body_text")
             yield Label("(how much time you have to wait before the dismiss button appears when breaking a rule)",
@@ -55,9 +55,11 @@ class ConfigurationScreen(ModalScreen):
             yield Label("Mode",classes="body_text")
             yield Label("(the way that the app warns you when breaking a rule)",
                         classes="subtitle")
+            yield Label("The html mode is currently disabled due having window managing problems",
+                        classes="important_text")
             with RadioSet(id="popup_mode_radio_set",classes="configuration_radio_set"):
                 yield RadioButton("Terminal", id="console")
-                yield RadioButton("HTML Page", id="html")
+                yield RadioButton("HTML Page", id="html",disabled=True)
             yield Label("The app will exit after applying the changes, you must rerun the app manually",
                         classes="important_text")
             yield Button(variant="success", label="Save Changes",id="save_config_button")
