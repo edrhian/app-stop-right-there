@@ -7,6 +7,7 @@ from textual.screen import ModalScreen
 from textual.containers import Vertical, ScrollableContainer
 from textual.reactive import reactive
 
+from core.paths import resource_path
 from core.window_manager import get_window_title
 from navigation.navigation_screen import NavigationScreen
 from navigation.screen_list import SCREEN_LIST
@@ -26,7 +27,7 @@ class WindowTitleDisplay(ModalScreen):
         ("c", "clear_list", "Clear Scan List"),
     ]
 
-    CSS_PATH = "../styles/window_title_display.tcss"
+    CSS_PATH = resource_path("styles/window_title_display.tcss")
 
     is_scanning = reactive(False)
     scan_state_label: Label | None = None

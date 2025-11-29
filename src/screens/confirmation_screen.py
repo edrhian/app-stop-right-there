@@ -4,6 +4,8 @@ from textual.widgets import Footer, Header, Label
 from textual.screen import ModalScreen
 from textual.containers import Vertical
 
+from core.paths import resource_path
+
 class ConfirmationScreen(ModalScreen):
     """Screen that displays a confirmation dialog"""
 
@@ -16,7 +18,7 @@ class ConfirmationScreen(ModalScreen):
         ("r", "confirm_deletion", "Confirm Deletion"),
     ]
 
-    CSS_PATH = "../styles/confirmation_screen.tcss"
+    CSS_PATH = resource_path("styles/confirmation_screen.tcss")
 
     def compose(self) -> ComposeResult:
         yield Header()

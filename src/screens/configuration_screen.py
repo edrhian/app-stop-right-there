@@ -7,6 +7,7 @@ from textual.widgets import Header, Footer, Label, Input, Button, RadioSet, Radi
 from textual.validation import Number
 
 from config.config import load_config, save_config
+from core.paths import resource_path
 from navigation.navigation_screen import NavigationScreen
 from navigation.screen_list import SCREEN_LIST
 
@@ -23,7 +24,7 @@ class ConfigurationScreen(ModalScreen):
 
     def on_mount(self):
         """Sets the inputs values to the current configuration"""
-        self.config = load_config(path="config/config.yaml")
+        self.config = load_config(path=resource_path("config/config.yaml"))
         self.duration = self.config['timer']['duration_seconds']
         self.popup_mode = self.config['popup']['mode']
 
@@ -85,7 +86,7 @@ class ConfigurationScreen(ModalScreen):
         # Save teh configuration and restart the app
         if button_id == "save_config_button":
             self.change_config_values()
-            save_config(path="config/config.yaml", configuration=self.config)
+            save_config(path=resource_path("config/config.yaml"), configuration=self.config)
             self.restart_in_new_terminal()
 
     def change_config_values(self) -> None:

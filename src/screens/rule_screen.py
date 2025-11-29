@@ -6,10 +6,12 @@ from textual import on
 from textual.screen import ModalScreen
 from textual.containers import Vertical
 
+from core.paths import resource_path
+
 class RuleScreen(ModalScreen[list]):
     """Screen to add and edit rules"""
 
-    CSS_PATH = "../styles/rule_screen.tcss"
+    CSS_PATH = resource_path("styles/rule_screen.tcss")
 
     def __init__(self, rule_name = "",rule_expression = "", enabled=True, mode = "add"):
         super().__init__()

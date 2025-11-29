@@ -1,6 +1,8 @@
 """Implementation for configuration file management"""
 import yaml
 
+from core.paths import resource_path
+
 def load_config(path: str):
     """Load a YAML config file
     
@@ -22,7 +24,8 @@ def save_config(path: str, configuration):
         yaml.safe_dump(configuration, file)
 
 if __name__ == "__main__":
-    config = load_config(path="config/config.yaml")
+    config_path = resource_path("config/config.yaml")
+    config = load_config(path=config_path)
     print(config['timer']['duration_seconds'])
     config['timer']['duration_seconds'] = 5
-    save_config(path="config/config.yaml", configuration=config)
+    save_config(path=config_path, configuration=config)

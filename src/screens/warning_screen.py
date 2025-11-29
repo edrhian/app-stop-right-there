@@ -9,6 +9,8 @@ from textual.containers import Vertical
 from textual.reactive import reactive
 from textual.timer import Timer
 
+from core.paths import resource_path
+
 class WarningScreen(ModalScreen):
     """Screen that appears when accessing a blacklisted window"""
     dismiss_button: Button
@@ -18,12 +20,12 @@ class WarningScreen(ModalScreen):
         super().__init__()
         self.broken_rule = broken_rule
         
-    CSS_PATH = "../styles/warning_screen.tcss"
+    CSS_PATH = resource_path("styles/warning_screen.tcss")
     time_left = reactive(5)
 
     def on_mount(self) -> None:
         """On mount WarningScreen"""
-        self.config = load_config(path="config/config.yaml")
+        self.config = load_config(path=resource_path("config/config.yaml"))
         self.time_left = self.config['timer']['duration_seconds']
         self.dismiss_button = self.query_one(Button)
         self.dismiss_button.disabled = True

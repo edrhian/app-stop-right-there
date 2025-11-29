@@ -11,7 +11,7 @@ def force_focus_html():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     html_path = os.path.join(base_dir, '..', 'screens', 'html', 'warning_screen.html')
     html_path = os.path.abspath(html_path)
-    webbrowser.open('file://' + html_path)
+    webbrowser.open('file://' + html_path, 2)
 
 def force_focus_console():
     """Forces the console window to the foreground"""

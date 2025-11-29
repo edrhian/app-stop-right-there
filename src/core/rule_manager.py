@@ -3,6 +3,7 @@ import asyncio
 import json
 from pathlib import Path
 from typing import List
+from core.paths import resource_path
 from core.rule import Rule, validate_rule
 
 class RuleManager:
@@ -92,4 +93,4 @@ class RuleManager:
         """Gets all rules"""
         return self.rules
 
-manager = RuleManager()
+manager = RuleManager(path=resource_path("data/blacklist.json"))

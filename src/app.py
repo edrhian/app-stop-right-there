@@ -7,6 +7,7 @@ from textual.widgets import Footer, Header, DataTable
 from textual import work
 from textual.reactive import reactive
 from config.config import load_config
+from core.paths import resource_path
 from core.window_manager import watch_screen_title
 from core.rule_manager import manager
 from core.rule import Rule
@@ -30,7 +31,7 @@ class StopRightThereApp(App):
     """Entrypoint of the app, displays a table with the rules"""        
 
     TITLE = "Stop Right There!"
-    CSS_PATH = "styles/app.tcss"
+    CSS_PATH = resource_path("styles/app.tcss")
 
     BINDINGS = [
         ("t", "show_screen_nav", "Navigation Menu"),
@@ -49,7 +50,7 @@ class StopRightThereApp(App):
 
     def on_mount(self) -> None:
         """Display data after mounting components and start window watcher"""
-        self.config = load_config(path="config/config.yaml")
+        self.config = load_config(path=resource_path("config/config.yaml"))
         self.popup_mode = self.config['popup']['mode']
         self.refresh_table()
         self.start_window_watch()
@@ -138,21 +139,3 @@ class StopRightThereApp(App):
         await manager.edit_rule(rule_name, expression, new_enabled)
 
         self.refresh_table(cursor_row)
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        filename="logs/app.log",
-        encoding="UTF-8",
-        filemode="a",
-        format="{asctime} - {levelname} - {message}",
-        style="{",
-        datefmt="%Y-%m-%d %H:%M",
-        level=logging.INFO,
-    )
-
-    if not os.path.isfile("data/blacklist.json"):
-        with open("data/blacklist.json", "w", encoding="UTF-8") as f:
-            f.write("[]")
-
-    app = StopRightThereApp()
-    app.run()
