@@ -23,7 +23,9 @@ Install the zip and run the StopRightThereApp.exe
 
 The main screens shows your blacklist, a list of rules.
 
-A rule is just a item that determines which windows have to be blacklisted. Each rule has the following attributes:
+A rule is just a item that determines which windows have to be blacklisted. Breaking a rule means that you accessed to a blacklisted window.
+
+Each rule has the following attributes:
 
 - **Name:** It must be unique, it helps you to know which rule is applied to your active window
 - **Expression:** The regular expression of the rule, it will trigger the rule if it matches with active window title
@@ -53,19 +55,47 @@ You can manage all rules from the **Main Screen**
 
 The function that reads regular expressions uses `re.search()`. This method scans through the title looking for a match to the pattern.
 
-For example, having a rule with the expression: **Youtube** will have the following effects on these titles:
+For example, having a rule with the expression: **YouTube** will have the following effects on these titles:
 
 - **Chrome**: It won't match
-- **Youtube**: It will match
-- **Youtube - Home**: It will match
-- **Chrome - Youtube**: It will match
-- **Chrome - youtube**: It won't match because of the lower case `y`
+- **YouTube**: It will match
+- **YouTube - Home**: It will match
+- **Chrome - YouTube**: It will match
+- **Chrome - youtube**: It won't match because of the lower case `y` and `t`
 
 ### Warning Screen
 
+When you break any of your enabled rules it will show up the following screen:
+
+![Warning Screen with the YT rule broken](docs/imgs/warning_screen.png)
+
+This screens displays the name of the rule that has been broken and a timer. The only purpose of the timer is to prevent disabling instantly the broken rule, its duration can be modified in the [Configuration Screen](#configuration-screen).
+
+> The app will show the warning screen above your other screens until you exit the blacklisted window, so you cant just ignore it.
+
 ### Window Title Display Screen
 
-### Configuration
+![Window Title Display Screen no scan](docs/imgs/window_title_screen_no_scan.png)
+
+This screen serves as a tool to build rule expressions. Pressing the `s` binding will start reading your active window title and it will display the text in the interface.
+
+To stop the scanning just press `s` again.
+
+![Window Title Display Screen scanning](docs/imgs/window_title_screen_scan.png)
+
+### Configuration Screen
+
+![Configuration Screen](docs/imgs/configuration_screen.png)
+
+This screen lets you to change your preferences of the app.
+
+- Timer Settings
+  - Duration: The how much you have to wait to dismiss the Warning screen, in seconds.
+
+- Popup Window Settings:
+  - Mode: How the app prevents you to accessing blacklisted windows.
+
+> Popup Window: This is configuration is currently disabled and the default value is `Terminal`
 
 ## Architecture
 
