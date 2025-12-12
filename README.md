@@ -4,14 +4,19 @@
 
 Stop Right There is a Desktop App for Windows to stop distractions based in your active window title and regular expressions (regex).
 
-## Screenshots
-
 ## Table of Contents
 
 ## Main Features
 
 - A terminal user interface (TUI) made with Textual framework
 - Blacklist windows by writing a regular expression to detect the title of your active window
+- Privacy, I do not receive any user data
+
+## Architecture
+
+- UI: Python [Textual Framework](https://github.com/textualize/textual/)
+- Data: All data is stored in the app files
+- Window Manager: I use windll from cytypes and win32gui to read the window titles
 
 ## Installation
 
@@ -22,6 +27,8 @@ Install the zip and run the StopRightThereApp.exe
 ### Main Screen
 
 The main screens shows your blacklist, a list of rules.
+
+![Main Screen showing a list of rules](docs/imgs/main_screen.png)
 
 A rule is just a item that determines which windows have to be blacklisted. Breaking a rule means that you accessed to a blacklisted window.
 
@@ -96,12 +103,6 @@ This screen lets you to change your preferences of the app.
   - Mode: How the app prevents you to accessing blacklisted windows.
 
 > Popup Window: This is configuration is currently disabled and the default value is `Terminal`
-
-## Architecture
-
-- TUI
-- File based
-- Window Manager
 
 ## Building
 
