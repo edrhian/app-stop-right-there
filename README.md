@@ -6,6 +6,27 @@ Stop Right There is a Desktop App for Windows to stop distractions based in your
 
 ## Table of Contents
 
+- [Stop Right There](#stop-right-there)
+  - [About](#about)
+  - [Table of Contents](#table-of-contents)
+  - [Main Features](#main-features)
+  - [Architecture](#architecture)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Main Screen](#main-screen)
+    - [Rule management](#rule-management)
+      - [Adding and editing rules](#adding-and-editing-rules)
+      - [Removing rules](#removing-rules)
+    - [About Regular Expressions](#about-regular-expressions)
+    - [Warning Screen](#warning-screen)
+    - [Window Title Display Screen](#window-title-display-screen)
+    - [Configuration Screen](#configuration-screen)
+  - [Building from source](#building-from-source)
+    - [Creating the executable](#creating-the-executable)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Resources](#resources)
+
 ## Main Features
 
 - A terminal user interface (TUI) made with Textual framework
@@ -152,8 +173,12 @@ This will create the `dist/app` directory with the app.exe and the `_internal` d
 
 ## License
 
+This project is under the MIT license.
+
 ## Resources
 
 - [Zeeshan Ahmad - Learn Regex The Easy Way](https://github.com/ziishaned/learn-regex): A github repository that explains what is a regular expression and how to build them, it has translations to other languages.
 - [Grant Skinner - RegExr](https://regexr.com/): A website that helps to build and test regular expressions.
-- [python re library documentation](https://docs.python.org/3/library/re.html): Documentation of the python regular expression library, for developers.
+- [Python 're' library documentation](https://docs.python.org/3/library/re.html): Documentation of the python regular expression library, for developers.
+- [Textual Framework](https://github.com/textualize/textual/): Textual framework documentation
+- [Pyinstaller documentation](https://pyinstaller.org/en/stable/)
