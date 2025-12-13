@@ -146,6 +146,8 @@ Finally, create the executable with the following command:
 pyinstaller ./main.spec
 ```
 
+This will create the `dist/app` directory with the app.exe and the `_internal` directory which contains the data of the application (config, blacklist, styles, etc.)
+
 ## Contributing
 
 ## License
