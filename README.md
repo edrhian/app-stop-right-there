@@ -171,9 +171,13 @@ This will create the `dist/app` directory with the app.exe and the `_internal` d
 
 ## Contributing
 
+Contribution guidelines are still being written.  
+In the meantime, feel free to open issues or pull requests if you have improvements or fixes.
+
 ## License
 
-This project is under the MIT license.
+This project is licensed under the MIT License.  
+You are free to use, modify, and fork this project in accordance with the license.
 
 ## Resources
 
