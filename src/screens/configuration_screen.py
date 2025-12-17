@@ -52,10 +52,10 @@ class ConfigurationScreen(ModalScreen):
                     ]
                 )
             yield Rule(line_style="double")
-            yield Label("Popup Window",classes="title")
-            yield Label("Mode",classes="body_text")
+            yield Label("Popup Window",classes="disabled_feature")
+            yield Label("Mode",classes="disabled_feature")
             yield Label("(the way that the app warns you when breaking a rule)",
-                        classes="subtitle")
+                        classes="disabled_feature")
             yield Label("The html mode is currently disabled due having window managing problems",
                         classes="important_text")
             with RadioSet(id="popup_mode_radio_set",classes="configuration_radio_set"):
