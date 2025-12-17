@@ -1,5 +1,7 @@
 # Stop Right There
 
+![Stop Right There Logo](docs/imgs/stop_right_there.png)
+
 ## About
 
 Stop Right There is a Desktop App for Windows to stop distractions based in your active window title and regular expressions (regex).
