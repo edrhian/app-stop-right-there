@@ -2,8 +2,8 @@
 import sys
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
-from textual.containers import VerticalScroll
-from textual.widgets import Header, Footer, Label, Input, Button, RadioSet, RadioButton
+from textual.containers import VerticalScroll, HorizontalGroup
+from textual.widgets import Header, Footer, Label, Input, Button, RadioSet, RadioButton, Rule
 from textual.validation import Number
 
 from config.config import load_config, save_config
@@ -51,6 +51,7 @@ class ConfigurationScreen(ModalScreen):
                         Number(minimum=1)
                     ]
                 )
+            yield Rule(line_style="double")
             yield Label("Popup Window",classes="title")
             yield Label("Mode",classes="body_text")
             yield Label("(the way that the app warns you when breaking a rule)",
@@ -60,9 +61,12 @@ class ConfigurationScreen(ModalScreen):
             with RadioSet(id="popup_mode_radio_set",classes="configuration_radio_set"):
                 yield RadioButton("Terminal", id="console")
                 yield RadioButton("HTML Page", id="html",disabled=True)
+            yield Rule(line_style="double")
             yield Label("The app will exit after applying the changes, you must rerun the app manually",
                         classes="important_text")
-            yield Button(variant="success", label="Save Changes",id="save_config_button")
+            with HorizontalGroup():
+                yield Button(variant="error", label="Cancel Changes",id="cancel_config_button")
+                yield Button(variant="success", label="Save Changes",id="save_config_button")
         yield Footer()
 
     def action_show_screen_nav(self) -> None:
@@ -90,6 +94,8 @@ class ConfigurationScreen(ModalScreen):
             self.change_config_values()
             save_config(path=resource_path("config/config.yaml"), configuration=self.config)
             self.restart_in_new_terminal()
+        if button_id == "cancel_config_button":
+            self.app.pop_screen()
 
     def change_config_values(self) -> None:
         """Get all input values and modify the configuration"""
@@ -102,6 +108,7 @@ class ConfigurationScreen(ModalScreen):
         if selected_popup_mode_option is not None:
             self.config['popup']['mode'] = selected_popup_mode_option.id
 
+    # NOTE: Restart behavior doesn't work for now, user must open the app manually after it saves the configuration
     def restart_in_new_terminal(self):
-        """Exit the program with code 99 (restart)"""
+        """Exit the program with code 99"""
         sys.exit(99)
