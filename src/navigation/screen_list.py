@@ -23,5 +23,10 @@ SCREEN_LIST: List[ScreenItem] = [
         "id": "configuration_screen",
         "prompt": "Configuration",
         "screen_class": None
-    }
+    },
+    {
+        "id": "documentation",
+        "prompt": "App Documentation",
+        "screen_class": None
+    },
 ]

@@ -1,5 +1,6 @@
 """Navigation Screen"""
 from typing import Sequence
+import webbrowser
 from textual.widgets import OptionList, Label
 from textual.screen import ModalScreen
 from textual.widgets.option_list import Option
@@ -56,6 +57,11 @@ class NavigationScreen(ModalScreen):
         target_screen = message.option.id
 
         for screen in self.screen_list:
+            if target_screen == "documentation":
+                webbrowser.open("https://github.com/edrhian/app-stop-right-there/tree/main", 2)
+                self.app.pop_screen()
+                return
+        
             if screen["id"] == target_screen:
                 screen_class = screen["screen_class"]
 
@@ -69,5 +75,6 @@ class NavigationScreen(ModalScreen):
 
                 self.app.push_screen(screen_class())
                 return
+            
 
         self.dismiss()
