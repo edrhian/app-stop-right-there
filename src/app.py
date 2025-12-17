@@ -81,20 +81,29 @@ class StopRightThereApp(App):
         name, expression, enabled = table.get_row(row_key)
         cursor_row = table.cursor_row
         return name, expression, enabled, cursor_row
+    
+    def notify_empty_list(self) -> bool:
+        """Checks if the rule list is empty and notifies the user"""
+        if len(manager.get_rules()) == 0:
+            self.notify("You don't have any rules, add one pressing 'a'")
+            return True
+        return False
+
 
     @work
     async def action_add_rule(self) -> None:
         """Pushes Rule Screen in add mode"""
         rule_name, rule_expression, rule_enabled = await self.push_screen_wait(RuleScreen("add"))
-        cursor_row = self.get_table_row_values()[-1]
         new_rule = Rule(rule_name, rule_expression, rule_enabled)
 
         await manager.create_rule(new_rule)
-        self.refresh_table(cursor_row)
+        self.refresh_table()
 
     @work
     async def action_edit_rule(self) -> None:
         """Pushes Rule Screen in edit mode"""
+        if self.notify_empty_list():
+            return
         old_name, old_expression, old_enabled, _ = self.get_table_row_values()
         cursor_row = self.get_table_row_values()[-1]
         _, new_expression, new_enabled = await self.push_screen_wait(RuleScreen(old_name,
@@ -120,6 +129,8 @@ class StopRightThereApp(App):
     @work
     async def action_remove_rule(self) -> None:
         """Pushes ConfirmationScreen dialog and deletes rule if confirmed"""
+        if self.notify_empty_list():
+            return
         rule_name = self.get_table_row_values()[0]
         cursor_row = self.get_table_row_values()[-1]
         confirm = await self.push_screen_wait(ConfirmationScreen(rule_name))
@@ -132,6 +143,8 @@ class StopRightThereApp(App):
     @work
     async def action_switch_enable(self) -> None:
         """Switches the enabled attribute of the rule at the current table row of the cursor"""
+        if self.notify_empty_list():
+            return
         rule_name, expression, enabled, _ = self.get_table_row_values()
         cursor_row = self.get_table_row_values()[-1]
         new_enabled = not enabled
