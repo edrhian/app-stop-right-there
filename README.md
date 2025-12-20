@@ -4,6 +4,8 @@
 
 ## About
 
+![Stop Right There GIF](docs/video/stop_right_there_demo.gif)
+
 Stop Right There is a Desktop App for Windows to stop distractions based in your active window title and regular expressions (regex).
 
 ## Table of Contents
