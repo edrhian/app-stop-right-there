@@ -24,6 +24,7 @@ Stop Right There is a Desktop App for Windows to stop distractions based in your
   - [Warning Screen](#warning-screen)
   - [Window Title Display Screen](#window-title-display-screen)
   - [Configuration Screen](#configuration-screen)
+  - [Closing the App](#closing-the-app)
 - [Building from source](#building-from-source)
   - [Creating the executable](#creating-the-executable)
 - [Contributing](#contributing)
@@ -127,6 +128,10 @@ This screen lets you to change your preferences of the app.
   - Mode: How the app prevents you to accessing blacklisted windows.
 
 > Popup Window: This is configuration is currently disabled and the default value is `Terminal`
+
+### Closing the App
+
+You can close the app by pressing `ctrl+q` or just close the terminal window.
 
 ## Building from source
 
