@@ -1,0 +1,14 @@
+Switch {
+    margin: 1;
+}
+
+Label.body_text {
+    margin: 1 2 1 2;
+}
+
+Label.rule_screen_title {
+    color: white;
+    text-style: bold;
+    margin: 1;
+    width: auto;
+}

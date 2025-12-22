@@ -1,0 +1,7 @@
+Label.confirmation_title {
+    text-style: bold;
+}
+
+Label.confirmation_text {
+    margin: 1 0 0 0;
+}

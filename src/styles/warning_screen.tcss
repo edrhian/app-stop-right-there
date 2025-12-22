@@ -1,0 +1,19 @@
+Button {
+    margin: 1;
+}
+
+#warning_container {
+    align: center middle;
+}
+
+Label.warning_text {
+    color: red;
+    text-style: bold;
+    margin: 1;
+    width: auto;
+}
+
+Digits {
+    width: auto;
+    margin: 0 1 0 1;
+}

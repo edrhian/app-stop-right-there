@@ -1,0 +1,4 @@
+popup:
+  mode: console
+timer:
+  duration_seconds: 5

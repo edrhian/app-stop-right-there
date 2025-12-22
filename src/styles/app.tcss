@@ -1,0 +1,69 @@
+DataTable {
+    width: 100%;
+}
+
+Input {
+    max-width: 70%;
+    margin: 1;
+}
+
+ModalScreen {
+    layout: vertical;
+    align: center middle;
+}
+
+Button.shown {
+    display: block;
+}
+
+Button.hidden {
+    display: none;
+}
+
+Label.body_text {
+    margin: 1 2 1 2;
+}
+
+Button {
+    align: center middle;
+    margin: 1 2 1 2;
+}
+
+OptionList.configuration_option_list {
+    margin: 1;
+}
+
+RadioSet.configuration_radio_set {
+    margin: 1;
+}
+
+.title {
+    text-style: bold;
+    margin: 1 2 1 2;
+}
+
+.subtitle {
+    text-style: italic;
+    margin: 1 2 1 2;
+}
+
+.important_text {
+    text-style: bold;
+    color: red;
+    margin: 1 2 1 2;
+}
+
+.dialog_box {
+    align: center middle;
+    border: white round;
+    width: auto;
+    height: auto;
+    padding: 1;
+    content-align: center middle;
+}
+
+.disabled_feature {
+    text-style: bold;
+    color: gray;
+    margin: 1 2 1 2;
+}
